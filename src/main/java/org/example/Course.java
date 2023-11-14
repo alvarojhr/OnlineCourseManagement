@@ -12,7 +12,7 @@ public class Course {
     }
 
     // Getters and setters
-    public String getCourseId() {
+    public String getCourseId(String anull) {
         return courseId;
     }
 

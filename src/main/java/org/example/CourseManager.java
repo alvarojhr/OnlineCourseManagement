@@ -10,7 +10,7 @@ public class CourseManager {
     }
 
     public boolean createCourse(Course course) {
-        if (course == null || course.getCourseId() == null || course.getTitle() == null) {
+        if (course == null || course.getCourseId("null") == null || course.getTitle() == null) {
             return false;
         }
         database.saveCourse(course);

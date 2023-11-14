@@ -18,9 +18,12 @@ public class InstructorTest {
     }
 
     @Test
-    void addCourse() {
-        instructor.addCourse(course1);
-        assertTrue(instructor.getCourses().contains(course1));
+    void addCourseisfalse() {
+        Course prueba1 = new Course("C001", "introduction to java", null);
+       // when(course.getCourseId("null")).thenReturn(prueba1);
+        assertEquals(true, Course.class); 
+        //instructor.addCourse(course1);
+        //assertTrue(instructor.getCourses().contains(course1));
     }
 
     @Test
@@ -50,5 +53,9 @@ public class InstructorTest {
     void removeCourseFromEmptyList() {
         instructor.removeCourse(course1); // Removing from an empty list
         assertFalse(instructor.getCourses().contains(course1));
+    }
+
+    private Object when(String courseId) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
