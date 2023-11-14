@@ -7,8 +7,10 @@ public class Instructor {
     private String instructorId;
     private String name;
     private List<Course> courses;
+    private String userName;
+    private String password;
 
-    public Instructor(String instructorId, String name) {
+    public Instructor(String instructorId, String name, String userName, String password) {
         this.instructorId = instructorId;
         this.name = name;
         this.courses = new ArrayList<>();
@@ -43,7 +45,21 @@ public class Instructor {
     public List<Course> getCourses() {
         return courses;
     }
-
+    
+    public String getuserName(){
+        return userName;
+    }
+    public void setuserNamen(String userName){
+        this.userName = userName;
+    } 
+    
+    public String getpassword(){
+        return password;
+    }
+    
+    public void setpassword(String password){
+        this.password = password;
+    }
     // Additional methods if necessary
 }
 

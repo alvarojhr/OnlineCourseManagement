@@ -12,7 +12,7 @@ public class InstructorTest {
 
     @BeforeEach
     void setUp() {
-        instructor = new Instructor("I001", "Dr. Smith");
+        instructor = new Instructor("I001", "Dr. Smith", "Smith", "test");
         course1 = new Course("C001", "Introduction to Java", instructor);
         course2 = new Course("C002", "Data Structures in Java", instructor);
     }
@@ -50,5 +50,16 @@ public class InstructorTest {
     void removeCourseFromEmptyList() {
         instructor.removeCourse(course1); // Removing from an empty list
         assertFalse(instructor.getCourses().contains(course1));
+    }
+    
+    @Test
+    void verifyUser() {
+        assertTrue(instructor.getuserName().equals("Smith"));
+    }
+    
+    @Test
+    void verifyPassword() {
+        instructor.setpassword("Test");
+        assertTrue(instructor.getpassword().equals("test"));
     }
 }
