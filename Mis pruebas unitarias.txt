@@ -1,0 +1,249 @@
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class InstructorTest {
+
+    private Instructor instructor;
+
+    @BeforeEach
+    public void setUp() {
+        instructor = new Instructor("123", "John Doe");
+    }
+
+    @Test
+    public void testAddCourse() {
+        Course course = new Course("CS101", "Introduction to Programming");
+        instructor.addCourse(course);
+        Assertions.assertTrue(instructor.getCourses().contains(course));
+    }
+
+    @Test
+    public void testRemoveCourse() {
+        Course course = new Course("CS101", "Introduction to Programming");
+        instructor.addCourse(course);
+        instructor.removeCourse(course);
+        Assertions.assertFalse(instructor.getCourses().contains(course));
+    }
+
+    @Test
+    public void testGetInstructorId() {
+        Assertions.assertEquals("123", instructor.getInstructorId());
+    }
+
+    @Test
+    public void testSetName() {
+        instructor.setName("Jane Doe");
+        Assertions.assertEquals("Jane Doe", instructor.getName());
+    }
+
+    @Test
+    public void testGetCourses() {
+        Course course1 = new Course("CS101", "Introduction to Programming");
+        Course course2 = new Course("CS102", "Advanced Programming");
+        instructor.addCourse(course1);
+        instructor.addCourse(course2);
+        List<Course> expectedCourses = new ArrayList<>();
+        expectedCourses.add(course1);
+        expectedCourses.add(course2);
+        Assertions.assertEquals(expectedCourses, instructor.getCourses());
+    }
+
+    @Test
+    public void testEquals() {
+        Instructor instructor1 = new Instructor("123", "John Doe");
+        Instructor instructor2 = new Instructor("456", "Jane Doe");
+        Assertions.assertTrue(instructor1.equals(instructor1));
+        Assertions.assertFalse(instructor1.equals(null));
+        Assertions.assertFalse(instructor1.equals(instructor2));
+        Assertions.assertTrue(instructor1.equals(new Instructor("123", "John Doe")));
+    }
+
+    @Test
+    public void testHashCode() {
+        Instructor instructor1 = new Instructor("123", "John Doe");
+        Instructor instructor2 = new Instructor("456", "Jane Doe");
+        Assertions.assertEquals(instructor1.hashCode(), instructor1.hashCode());
+        Assertions.assertNotEquals(instructor1.hashCode(), instructor2.hashCode());
+        Assertions.assertEquals(instructor1.hashCode(), new Instructor("123", "John Doe").hashCode());
+    }
+
+    @Test
+    public void testToString() {
+        Assertions.assertEquals("Instructor{instructorId='123', name='John Doe', courses=[]}", instructor.toString());
+    }
+}
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class CourseManagerTest {
+
+    private CourseManager courseManager;
+    private CourseDatabase database;
+
+    @BeforeEach
+    public void setUp() {
+        database = Mockito.mock(CourseDatabase.class);
+        courseManager = new CourseManager(database);
+    }
+
+    @Test
+    public void testCreateCourse() {
+        Course course = new Course("CS101", "Introduction to Programming");
+        Mockito.when(database.saveCourse(course)).thenReturn(true);
+        Assertions.assertTrue(courseManager.createCourse(course));
+    }
+
+    @Test
+    public void testCreateCourseWithNullCourse() {
+        Course course = null;
+        Assertions.assertFalse(courseManager.createCourse(course));
+    }
+
+    @Test
+    public void testCreateCourseWithNullCourseId() {
+        Course course = new Course(null, "Introduction to Programming");
+        Assertions.assertFalse(courseManager.createCourse(course));
+    }
+
+    @Test
+    public void testCreateCourseWithNullTitle() {
+        Course course = new Course("CS101", null);
+        Assertions.assertFalse(courseManager.createCourse(course));
+    }
+
+    @Test
+    public void testDeleteCourse() {
+        String courseId = "CS101";
+        Mockito.when(database.getCourseById(courseId)).thenReturn(new Course(courseId, "Introduction to Programming"));
+        Mockito.when(database.deleteCourse(courseId)).thenReturn(true);
+        Assertions.assertTrue(courseManager.deleteCourse(courseId));
+    }
+
+    @Test
+    public void testDeleteCourseWithNullCourseId() {
+        String courseId = null;
+        Assertions.assertFalse(courseManager.deleteCourse(courseId));
+    }
+
+    @Test
+    public void testDeleteCourseWithNonexistentCourseId() {
+        String courseId = "CS101";
+        Mockito.when(database.getCourseById(courseId)).thenReturn(null);
+        Assertions.assertFalse(courseManager.deleteCourse(courseId));
+    }
+
+    @Test
+    public void testGetCourseById() {
+        String courseId = "CS101";
+        Course course = new Course(courseId, "Introduction to Programming");
+        Mockito.when(database.getCourseById(courseId)).thenReturn(course);
+        Assertions.assertEquals(course, courseManager.getCourseById(courseId));
+    }
+
+    @Test
+    public void testGetCourseByIdWithNullCourseId() {
+        String courseId = null;
+        Assertions.assertNull(courseManager.getCourseById(courseId));
+    }
+
+    @Test
+    public void testGetCourseByIdWithNonexistentCourseId() {
+        String courseId = "CS101";
+        Mockito.when(database.getCourseById(courseId)).thenReturn(null);
+        Assertions.assertNull(courseManager.getCourseById(courseId));
+    }
+
+    @Test
+    public void testGetCoursesByInstructor() {
+        String instructorId = "I001";
+        List<Course> courses = new ArrayList<>();
+        courses.add(new Course("CS101", "Introduction to Programming"));
+        courses.add(new Course("CS102", "Advanced Programming"));
+        Mockito.when(database.getCoursesByInstructorId(instructorId)).thenReturn(courses);
+        Assertions.assertEquals(courses, courseManager.getCoursesByInstructor(instructorId));
+    }
+
+    @Test
+    public void testGetCoursesByInstructorWithNullInstructorId() {
+        String instructorId = null;
+        Assertions.assertNull(courseManager.getCoursesByInstructor(instructorId));
+    }
+
+    @Test
+    public void testGetCoursesByInstructorWithNonexistentInstructorId() {
+        String instructorId = "I001";
+        Mockito.when(database.getCoursesByInstructorId(instructorId)).thenReturn(null);
+        Assertions.assertNull(courseManager.getCoursesByInstructor(instructorId));
+    }
+}
+
+CourseId() {
+        Assertions.assertEquals("CS101", course.getCourseId());
+    }
+
+    @Test
+    public void testSetCourseId() {
+        course.setCourseId("CS201");
+        Assertions.assertEquals("CS201", course.getCourseId());
+    }
+
+    @Test
+    public void testGetTitle() {
+        Assertions.assertEquals("Introduction to Programming", course.getTitle());
+    }
+
+    @Test
+    public void testSetTitle() {
+        course.setTitle("Advanced Programming");
+        Assertions.assertEquals("Advanced Programming", course.getTitle());
+    }
+
+    @Test
+    public void testGetInstructor() {
+        Assertions.assertEquals(instructor, course.getInstructor());
+    }
+
+    @Test
+    public void testSetInstructor() {
+        Instructor newInstructor = new Instructor("I002", "Jane Doe");
+        course.setInstructor(newInstructor);
+        Assertions.assertEquals(newInstructor, course.getInstructor());
+    }
+
+    @Test
+    public void testEquals() {
+        Course course1 = new Course("CS101", "Introduction to Programming", instructor);
+        Course course2 = new Course("CS102", "Advanced Programming", instructor);
+        Assertions.assertTrue(course1.equals(course1));
+        Assertions.assertFalse(course1.equals(null));
+        Assertions.assertFalse(course1.equals(course2));
+        Assertions.assertTrue(course1.equals(new Course("CS101", "Introduction to Programming", instructor)));
+    }
+
+    @Test
+    public void testHashCode() {
+        Course course1 = new Course("CS101", "Introduction to Programming", instructor);
+        Course course2 = new Course("CS102", "Advanced Programming", instructor);
+        Assertions.assertEquals(course1.hashCode(), course1.hashCode());
+        Assertions.assertNotEquals(course1.hashCode(), course2.hashCode());
+        Assertions.assertEquals(course1.hashCode(), new Course("CS101", "Introduction to Programming", instructor).hashCode());
+    }
+
+    @Test
+    public void testToString() {
+        Assertions.assertEquals("Course{courseId='CS101', title='Introduction to Programming', instructor=Instructor{instructorId='I001', name='John Doe'}}", course.toString());
+    }
+}
+
+
+
