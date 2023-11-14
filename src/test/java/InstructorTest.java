@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import org.example.Course;
 import org.example.Instructor;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,12 +8,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 
 public class InstructorTest {
-    private Instructor instructor;
+    private Instructor instructor, instructor2;
     private Course course1, course2;
 
     @BeforeEach
     void setUp() {
         instructor = new Instructor("I001", "Dr. Smith");
+        instructor2 = new Instructor("I002", "Camilo");
         course1 = new Course("C001", "Introduction to Java", instructor);
         course2 = new Course("C002", "Data Structures in Java", instructor);
     }
@@ -37,7 +39,18 @@ public class InstructorTest {
         instructor.removeCourse(course1);
         assertFalse(instructor.getCourses().contains(course1));
     }
-
+    
+    @Test
+    void removeMultipleCourses(){
+        instructor.addCourse(course1);
+        instructor.addCourse(course2);
+        instructor.removeCourse(course1);
+        instructor.removeCourse(course2);
+        List<Course> courses = instructor.getCourses();
+        assertFalse(courses.contains(course1));
+        assertFalse(courses.contains(course2));
+    }
+    
     @Test
     void removeCourseNotAdded() {
         instructor.addCourse(course1);
@@ -51,4 +64,46 @@ public class InstructorTest {
         instructor.removeCourse(course1); // Removing from an empty list
         assertFalse(instructor.getCourses().contains(course1));
     }
+    
+    @Test
+    void getInstructorName(){
+        assertEquals("Dr. Smith", instructor.getName());
+    }
+    
+    @Test
+    void changeInstructorName(){
+        instructor.setName("Camilo");
+        assertEquals("Camilo", instructor.getName());
+    }
+    
+    @Test
+    void getInstructorId(){
+        assertEquals("I001", instructor.getInstructorId());
+    }
+    
+    @Test
+    void changeInstructorId(){
+        instructor.setInstructorId("K001");
+        assertEquals("K001", instructor.getInstructorId());
+    }
+    
+    @Test
+    void getCourses() {
+        instructor.addCourse(course1);
+        instructor.addCourse(course2);
+        List<Course> courses = new ArrayList <> ();
+        courses.add(course1);
+        courses.add(course2);
+        assertEquals(courses, instructor.getCourses());
+    }
+    
+    @Test
+    void getCorrectCourses(){
+        instructor.addCourse(course1);
+        instructor2.addCourse(course2);
+        List<Course> courses = new ArrayList <> ();
+        courses.add(course1);
+        assertEquals(courses, instructor.getCourses());
+    }
+    
 }
